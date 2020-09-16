@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/agreement_page.dart';
+import 'package:flutter_app/model/product_model.dart';
+import 'package:flutter_app/pages/gjj/gjj_home_page.dart';
+import 'package:flutter_app/pages/demo/shopping_list.dart';
+import 'package:flutter_app/pages/demo/shopping_list_item.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main()=>runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -11,22 +12,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primaryColor: Colors.white,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: AgreementPage(),
+      title: 'Shopping App',
+      home: new ShoppingList(
+        products: <ProductModel>[
+          new ProductModel(name: 'Eggs'),
+          new ProductModel(name: 'Flour'),
+          new ProductModel(name: 'Chocolate chips'),
+        ],
+      ),
     );
   }
 }

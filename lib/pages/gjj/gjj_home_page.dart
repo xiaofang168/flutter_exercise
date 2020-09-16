@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 
-class AgreementPage extends StatefulWidget {
+class GjjHomePage extends StatefulWidget {
   @override
-  _AgreementPageState createState() => _AgreementPageState();
+  _GjjHomePageState createState() => _GjjHomePageState();
 }
 
-class _AgreementPageState extends State<AgreementPage> {
+class _GjjHomePageState extends State<GjjHomePage> {
 
   // andorid file:///android_asset/flutter_assets/assets/files/gjj_home.html
   String filePath = 'assets/files/gjj_home.html';
@@ -15,8 +15,8 @@ class _AgreementPageState extends State<AgreementPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: WebViewPlus(
-          initialUrl: filePath,
-          javascriptMode: JavascriptMode.unrestricted
+            initialUrl: filePath,
+            javascriptMode: JavascriptMode.unrestricted
         )
     );
   }

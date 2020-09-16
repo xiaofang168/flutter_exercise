@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/web_page.dart';
+import 'package:flutter_app/pages/demo/web_page.dart';
 
 class MyApp extends StatelessWidget {
 
