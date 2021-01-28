@@ -50,39 +50,43 @@ class _UserAuditState extends State<UserAudit> {
     );
   }
 
-  Widget _listItemBuilder(BuildContext context, int index) {
-    return UserCard(
-        userName: userItems[index].userName,
-        sex: userItems[index].sex,
-        avatar: userItems[index].avatar);
-  }
-
   // 用户信息列表
   ListView _userList() {
     return ListView.builder(
       padding: EdgeInsets.all(10),
       itemCount: userItems.length,
-      itemBuilder: _listItemBuilder,
+      itemBuilder: (BuildContext context, int index) {
+        return UserCard(deleteUserItem,
+            index: index,
+            userName: userItems[index].userName,
+            sex: userItems[index].sex,
+            avatar: userItems[index].avatar);
+      },
     );
+  }
+
+  void deleteUserItem(index) {
+    // 更新UI
+    setState(() => userItems.removeAt(index));
   }
 }
 
 class UserCard extends StatefulWidget {
+  final int index;
   final String userName;
   final int sex;
   final String avatar;
+  final Function(int) removeUserCard;
 
-  UserCard({Key key, this.userName, this.sex, this.avatar}) : super(key: key);
+  const UserCard(this.removeUserCard,
+      {Key key, @required this.index, this.userName, this.sex, this.avatar})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _UserCardState();
 }
 
 class _UserCardState extends State<UserCard> {
-  String _newLevel = "SR";
-  Color _btColor = Colors.grey;
-  int _btClickCount = 0;
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
@@ -97,40 +101,43 @@ class _UserCardState extends State<UserCard> {
           child: Column(
             children: [
               Image.network(widget.avatar),
-              Row(children: [
-                Flexible(
-                    child: RadioListTile<String>(
-                  value: 'SR',
-                  title: Text('SR'),
-                  groupValue: _newLevel,
-                  onChanged: (value) {
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                RaisedButton(
+                  color: Colors.blue,
+                  colorBrightness: Brightness.dark,
+                  child: Text("SR"),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  onPressed: () {
                     setState(() {
-                      this._newLevel = value;
+                      // todo
                     });
                   },
-                )),
-                Flexible(
-                    child: RadioListTile<String>(
-                  value: 'R',
-                  title: Text('R'),
-                  groupValue: _newLevel,
-                  onChanged: (value) {
+                ),
+                RaisedButton(
+                  color: Colors.cyan,
+                  colorBrightness: Brightness.dark,
+                  child: Text("R"),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  onPressed: () {
                     setState(() {
-                      this._newLevel = value;
+                      // todo
                     });
                   },
-                )),
-                Flexible(
-                    child: RadioListTile<String>(
-                  value: 'N',
-                  title: Text('N'),
-                  groupValue: _newLevel,
-                  onChanged: (value) {
+                ),
+                RaisedButton(
+                  color: Colors.orange,
+                  colorBrightness: Brightness.dark,
+                  child: Text("N"),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  onPressed: () {
                     setState(() {
-                      this._newLevel = value;
+                      // todo
                     });
                   },
-                ))
+                )
               ]),
               Row(
                 children: [
@@ -163,18 +170,14 @@ class _UserCardState extends State<UserCard> {
                         child: Column(
                           children: [
                             RaisedButton(
-                              color: _btColor,
+                              color: Colors.red,
+                              colorBrightness: Brightness.dark,
                               child: Text('不通过'),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
                               onPressed: () {
-                                setState(() {
-                                  if (_btClickCount == 0) {
-                                    _btColor = Colors.red;
-                                    _btClickCount = _btClickCount + 1;
-                                  } else {
-                                    _btColor = Colors.grey;
-                                    _btClickCount = _btClickCount - 1;
-                                  }
-                                });
+                                setState(
+                                    () => widget.removeUserCard(widget.index));
                               },
                             )
                           ],
@@ -183,10 +186,6 @@ class _UserCardState extends State<UserCard> {
                     ],
                   ),
                 ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[Text("你选择的是${this._newLevel}")],
               ),
             ],
           )),
