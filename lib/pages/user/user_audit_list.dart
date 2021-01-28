@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/system_status_entity.dart';
 import 'package:flutter_app/model/user_item_entity.dart';
+import 'package:flutter_app/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
@@ -22,11 +23,6 @@ class _UserAuditState extends State<UserAudit> {
     print("${ss.data}>>>>>");
   }
 
-  void post() async {
-    Response response = await Dio()
-        .post("http://test-pikpik-api.weli010.cn/pikpik/system/status", data: {"id": 3, "name": "liuwangshu"});
-  }
-
   @override
   void initState() {
     super.initState();
@@ -35,21 +31,21 @@ class _UserAuditState extends State<UserAudit> {
     // 定义json数据
     var data = [
       {
-        "id":1,
+        "id": 1,
         "user_name": "张三",
         "sex": 1,
         "avatar":
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
       },
       {
-        "id":2,
+        "id": 2,
         "user_name": "李四",
         "sex": 1,
         "avatar":
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
       },
       {
-        "id":3,
+        "id": 3,
         "user_name": "刘玄德",
         "sex": 1,
         "avatar":
@@ -66,7 +62,22 @@ class _UserAuditState extends State<UserAudit> {
       title: "Material",
       theme: new ThemeData(primaryColor: Colors.blue, errorColor: Colors.red),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(appBar: AppBar(title: Text("用户信息审核")), body: _userList()),
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text("用户信息审核"),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  // do something
+                },
+              )
+            ],
+          ),
+          body: _userList()),
     );
   }
 
@@ -76,7 +87,7 @@ class _UserAuditState extends State<UserAudit> {
       padding: EdgeInsets.all(10),
       itemCount: userItems.length,
       itemBuilder: (BuildContext context, int index) {
-        return UserCard(deleteUserItem,
+        return UserCard(commit,
             index: index,
             userName: userItems[index].userName,
             sex: userItems[index].sex,
@@ -85,9 +96,13 @@ class _UserAuditState extends State<UserAudit> {
     );
   }
 
-  void deleteUserItem(index) {
+  void commit(int index, String level) {
+    print("$index >>> $level");
     // 更新UI
-    setState(() => userItems.removeAt(index));
+    // Dio().post("http://test-pikpik-api.weli010.cn/pikpik/system/status", data: {"id": 3, "name": "liuwangshu"}).then(
+    //   (value) => {
+    //         if (value.toString() != "") {setState(() => userItems.removeAt(index))} else {AppToast.show('服务异常...')}
+    //       });
   }
 }
 
@@ -96,10 +111,9 @@ class UserCard extends StatefulWidget {
   final String userName;
   final int sex;
   final String avatar;
-  final Function(int) removeUserCard;
+  final Function(int, String) commit;
 
-  const UserCard(this.removeUserCard, {Key key, @required this.index, this.userName, this.sex, this.avatar})
-      : super(key: key);
+  const UserCard(this.commit, {Key key, @required this.index, this.userName, this.sex, this.avatar}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _UserCardState();
@@ -125,9 +139,7 @@ class _UserCardState extends State<UserCard> {
                   child: Text("SR"),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                   onPressed: () {
-                    setState(() {
-                      // todo
-                    });
+                    widget.commit(widget.index, "SR");
                   },
                 ),
                 RaisedButton(
@@ -136,9 +148,7 @@ class _UserCardState extends State<UserCard> {
                   child: Text("R"),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                   onPressed: () {
-                    setState(() {
-                      // todo
-                    });
+                    widget.commit(widget.index, "R");
                   },
                 ),
                 RaisedButton(
@@ -147,9 +157,7 @@ class _UserCardState extends State<UserCard> {
                   child: Text("N"),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                   onPressed: () {
-                    setState(() {
-                      // todo
-                    });
+                    widget.commit(widget.index, "N");
                   },
                 )
               ]),
@@ -186,7 +194,7 @@ class _UserCardState extends State<UserCard> {
                               child: Text('不通过'),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                               onPressed: () {
-                                setState(() => widget.removeUserCard(widget.index));
+                                widget.commit(widget.index, "不通过");
                               },
                             )
                           ],
