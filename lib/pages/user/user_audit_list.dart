@@ -1,19 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/system_status_entity.dart';
 import 'package:flutter_app/model/user_item_entity.dart';
+import 'package:flutter_app/pages/user/user_audit_search.dart';
 import 'package:flutter_app/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
-void main() => runApp(UserAudit());
+void main() => runApp(UserAuditList());
 
-class UserAudit extends StatefulWidget {
+class UserAuditList extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _UserAuditState();
+  State<StatefulWidget> createState() => _UserAuditListState();
 }
 
-class _UserAuditState extends State<UserAudit> {
+class _UserAuditListState extends State<UserAuditList> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Material",
+      theme: new ThemeData(primaryColor: Colors.blue, errorColor: Colors.red),
+      debugShowCheckedModeBanner: false,
+      home: UserAuditListPage(),
+    );
+  }
+}
+
+class UserAuditListPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _UserAuditListPageState();
+}
+
+class _UserAuditListPageState extends State<UserAuditListPage> {
   List<UserItemEntity> userItems;
 
   void fetchData() async {
@@ -21,6 +39,15 @@ class _UserAuditState extends State<UserAudit> {
     print(response.toString());
     SystemStatusEntity ss = SystemStatusEntity().fromJson(jsonDecode(response.toString()));
     print("${ss.data}>>>>>");
+  }
+
+  void commit(int index, String level) {
+    print("$index >>> $level");
+    // 更新UI
+    // Dio().post("http://test-pikpik-api.weli010.cn/pikpik/system/status", data: {"id": 3, "name": "liuwangshu"}).then(
+    //   (value) => {
+    //         if (value.toString() != "") {setState(() => userItems.removeAt(index))} else {AppToast.show('服务异常...')}
+    //       });
   }
 
   @override
@@ -56,31 +83,6 @@ class _UserAuditState extends State<UserAudit> {
     userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Material",
-      theme: new ThemeData(primaryColor: Colors.blue, errorColor: Colors.red),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text("用户信息审核"),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  // do something
-                },
-              )
-            ],
-          ),
-          body: _userList()),
-    );
-  }
-
   // 用户信息列表
   ListView _userList() {
     return ListView.builder(
@@ -96,13 +98,31 @@ class _UserAuditState extends State<UserAudit> {
     );
   }
 
-  void commit(int index, String level) {
-    print("$index >>> $level");
-    // 更新UI
-    // Dio().post("http://test-pikpik-api.weli010.cn/pikpik/system/status", data: {"id": 3, "name": "liuwangshu"}).then(
-    //   (value) => {
-    //         if (value.toString() != "") {setState(() => userItems.removeAt(index))} else {AppToast.show('服务异常...')}
-    //       });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("用户信息审核"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              showDialog(context: context, builder: (BuildContext context) => UserAuditSearch());
+            },
+          )
+        ],
+      ),
+      body: _userList(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.search),
+        onPressed: () {
+          showDialog(context: context, builder: (BuildContext context) => UserAuditSearch());
+        },
+      ),
+    );
   }
 }
 
