@@ -9,25 +9,39 @@ class _UserAuditSearchState extends State<UserAuditSearch> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: Text('SimpleDialog'),
-      children: <Widget>[
-        SimpleDialogOption(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('我是男人'),
+      title: Text('待审核用户信息查询'),
+      children: [
+        TextField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.all(10.0),
+            icon: Icon(Icons.calendar_today),
+            labelText: '注册日期',
+            helperText: 'yyyy/MM/dd',
+          ),
+          autofocus: true,
         ),
-        SimpleDialogOption(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('我是女人'),
+        TextField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.all(10.0),
+            icon: Icon(Icons.person),
+            labelText: '性别',
+            helperText: '0:女 1男',
+          ),
         ),
-        SimpleDialogOption(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('我是人妖'),
+        Center(
+          child: RaisedButton(
+            color: Colors.blue,
+            colorBrightness: Brightness.dark,
+            child: Text("查询"),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            onPressed: () {
+              // 查询&关闭窗口
+              Navigator.pop(context);
+            },
+          ),
         ),
       ],
     );
