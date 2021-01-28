@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/product_model.dart';
 import 'package:flutter_app/pages/demo/shopping_list_item.dart';
+
 class ShoppingList extends StatefulWidget {
   ShoppingList({Key key, this.products}) : super(key: key);
 
@@ -39,13 +40,13 @@ class _ShoppingListState extends State<ShoppingList> {
       ),
       body: new ListView(
         padding: new EdgeInsets.symmetric(vertical: 8.0),
-        children: widget.products.map((ProductModel product) {
-          return new ShoppingListItem(
-            productModel: product,
-            inCart: _shoppingCart.contains(product),
-            onCartChanged: _handleCartChanged,
-          );
-        }).toList(),
+        children: widget.products
+            .map((product) => new ShoppingListItem(
+                  productModel: product,
+                  inCart: _shoppingCart.contains(product),
+                  onCartChanged: _handleCartChanged,
+                ))
+            .toList(),
       ),
     );
   }
