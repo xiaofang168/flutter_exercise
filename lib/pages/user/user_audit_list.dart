@@ -22,17 +22,18 @@ class _UserAuditListState extends State<UserAuditList> {
       title: "Material",
       theme: new ThemeData(primaryColor: Colors.blue, errorColor: Colors.red),
       debugShowCheckedModeBanner: false,
-      home: UserAuditListPage(),
+      home: UserAuditListHome(),
     );
   }
 }
 
-class UserAuditListPage extends StatefulWidget {
+/// 用户审核列表主页
+class UserAuditListHome extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _UserAuditListPageState();
+  State<StatefulWidget> createState() => _UserAuditListHomeState();
 }
 
-class _UserAuditListPageState extends State<UserAuditListPage> {
+class _UserAuditListHomeState extends State<UserAuditListHome> {
   List<UserItemEntity> userItems;
 
   void fetchData() async {
@@ -113,7 +114,6 @@ class _UserAuditListPageState extends State<UserAuditListPage> {
       userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
     });
   }
-
   // 用户信息列表
   ListView _userList() {
     return ListView.builder(
@@ -165,6 +165,7 @@ class _UserAuditListPageState extends State<UserAuditListPage> {
   }
 }
 
+/// 用户卡片
 class UserCard extends StatefulWidget {
   final int index;
   final String userName;
