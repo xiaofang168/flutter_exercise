@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/system_status_entity.dart';
 import 'package:flutter_app/model/user_item_entity.dart';
+import 'package:flutter_app/model/user_search_entity.dart';
 import 'package:flutter_app/pages/user/user_audit_search.dart';
 import 'package:flutter_app/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +42,7 @@ class _UserAuditListPageState extends State<UserAuditListPage> {
     print("${ss.data}>>>>>");
   }
 
-  void commit(int index, String level) {
+  void _commit(int index, String level) {
     print("$index >>> $level");
     // 更新UI
     // Dio().post("http://test-pikpik-api.weli010.cn/pikpik/system/status", data: {"id": 3, "name": "liuwangshu"}).then(
@@ -83,13 +84,19 @@ class _UserAuditListPageState extends State<UserAuditListPage> {
     userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
   }
 
+  void _userSearch(UserSearchEntity userSearchEntity) {
+    setState(() {
+      print(userSearchEntity.date);
+    });
+  }
+
   // 用户信息列表
   ListView _userList() {
     return ListView.builder(
       padding: EdgeInsets.all(10),
       itemCount: userItems.length,
       itemBuilder: (BuildContext context, int index) {
-        return UserCard(commit,
+        return UserCard(_commit,
             index: index,
             userName: userItems[index].userName,
             sex: userItems[index].sex,
@@ -110,7 +117,11 @@ class _UserAuditListPageState extends State<UserAuditListPage> {
               color: Colors.white,
             ),
             onPressed: () {
-              showDialog(context: context, builder: (BuildContext context) => UserAuditSearch());
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => UserAuditSearch(
+                        userSearchCallback: _userSearch,
+                      ));
             },
           )
         ],
@@ -119,7 +130,11 @@ class _UserAuditListPageState extends State<UserAuditListPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.search),
         onPressed: () {
-          showDialog(context: context, builder: (BuildContext context) => UserAuditSearch());
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => UserAuditSearch(
+                    userSearchCallback: _userSearch,
+                  ));
         },
       ),
     );
@@ -151,7 +166,11 @@ class _UserCardState extends State<UserCard> {
           decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Colors.blue))),
           child: Column(
             children: [
-              Image.network(widget.avatar),
+              FadeInImage.assetNetwork(
+                  image: widget.avatar,
+                  placeholder: "assets/images/loading.gif",
+                  fadeOutDuration: Duration(milliseconds: 3000),
+                  fadeOutCurve: Curves.easeOut),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 RaisedButton(
                   color: Colors.blue,
