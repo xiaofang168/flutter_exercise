@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/system_status_entity.dart';
 import 'package:flutter_app/model/user_item_entity.dart';
@@ -5,8 +8,6 @@ import 'package:flutter_app/model/user_search_entity.dart';
 import 'package:flutter_app/pages/user/user_audit_search.dart';
 import 'package:flutter_app/utils/toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:dio/dio.dart';
-import 'dart:convert';
 
 void main() => runApp(UserAuditList());
 
@@ -34,30 +35,21 @@ class UserAuditListHome extends StatefulWidget {
 }
 
 class _UserAuditListHomeState extends State<UserAuditListHome> {
-  List<UserItemEntity> userItems;
+  ScrollController _scrollController = new ScrollController();
+  List<UserItemEntity> userItems = [];
 
-  void fetchData() async {
+  // 下拉刷新->转一秒的圈,回调刷新的方法
+  Future<void> _onRefresh() async {
+    await Future.delayed(Duration(seconds: 1), () {
+      _fetchData();
+    });
+  }
+
+  void _fetchData() async {
     Response response = await Dio().get("http://test-pikpik-api.weli010.cn/pikpik/system/status");
     print(response.toString());
     SystemStatusEntity ss = SystemStatusEntity().fromJson(jsonDecode(response.toString()));
     print("${ss.data}>>>>>");
-  }
-
-  void _commit(int index, String level) {
-    print("$index >>> $level");
-    // 更新UI
-    // Dio().post("http://test-pikpik-api.weli010.cn/pikpik/system/status", data: {"id": 3, "name": "liuwangshu"}).then(
-    //   (value) => {
-    //         if (value.toString() != "") {setState(() => userItems.removeAt(index))} else {AppToast.show('服务异常...')}
-    //       });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // 请求服务器数据
-    fetchData();
-    // 定义json数据
     var data = [
       {
         "id": 1,
@@ -82,7 +74,31 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
       }
     ];
     // json数据解析
-    userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
+    setState(() {
+      userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
+    });
+  }
+
+  void _commit(int index, String level) {
+    print("$index >>> $level");
+    // 更新UI
+    // Dio().post("http://test-pikpik-api.weli010.cn/pikpik/system/status", data: {"id": 3, "name": "liuwangshu"}).then(
+    //   (value) => {
+    //         if (value.toString() != "") {setState(() => userItems.removeAt(index))} else {AppToast.show('服务异常...')}
+    //       });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 请求服务器数据
+    _fetchData();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        // 当滑到最底部时调用
+        print("到底了...");
+      }
+    });
   }
 
   void _userSearch(UserSearchEntity userSearchEntity) {
@@ -92,41 +108,27 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
         "user_name": "凯德茂的猫",
         "sex": 1,
         "avatar":
-        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
       },
       {
         "id": 2,
         "user_name": "钢铁侠",
         "sex": 1,
         "avatar":
-        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
       },
       {
         "id": 3,
         "user_name": "蜘蛛侠",
         "sex": 1,
         "avatar":
-        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
       }
     ];
     setState(() {
       // 更新用户列表
       userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
     });
-  }
-  // 用户信息列表
-  ListView _userList() {
-    return ListView.builder(
-      padding: EdgeInsets.all(10),
-      itemCount: userItems.length,
-      itemBuilder: (BuildContext context, int index) {
-        return UserCard(_commit,
-            index: index,
-            userName: userItems[index].userName,
-            sex: userItems[index].sex,
-            avatar: userItems[index].avatar);
-      },
-    );
   }
 
   @override
@@ -150,7 +152,25 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
           )
         ],
       ),
-      body: _userList(),
+      body: userItems.length > 0
+          ? RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: ListView.builder(
+                padding: EdgeInsets.all(10),
+                itemCount: userItems.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return UserCard(_commit,
+                      index: index,
+                      userName: userItems[index].userName,
+                      sex: userItems[index].sex,
+                      avatar: userItems[index].avatar);
+                },
+                controller: _scrollController,
+              ),
+            )
+          : Center(
+              child: Text("数据加载中..."),
+            ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.search),
         onPressed: () {
