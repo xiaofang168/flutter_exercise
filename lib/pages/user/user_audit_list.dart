@@ -37,6 +37,7 @@ class UserAuditListHome extends StatefulWidget {
 class _UserAuditListHomeState extends State<UserAuditListHome> {
   ScrollController _scrollController = new ScrollController();
   List<UserItemEntity> userItems = [];
+  UserSearchEntity userSearchEntity = UserSearchEntity(date: "", sex: "");
   String dataAlert = "数据加载中...";
 
   // 下拉刷新->转一秒的圈,回调刷新的方法
@@ -103,6 +104,7 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
   }
 
   void _userSearch(UserSearchEntity userSearchEntity) async {
+    this.userSearchEntity = userSearchEntity;
     var data = [
       {
         "id": 1,
@@ -128,7 +130,7 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
     ];
     // 清空数据
     setState(() {
-      userItems=[];
+      userItems = [];
       dataAlert = "数据查询中...";
     });
     await Future.delayed(Duration(seconds: 1), () {
@@ -154,6 +156,7 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) => UserAuditSearch(
+                        userSearchEntity: userSearchEntity,
                         userSearchCallback: _userSearch,
                       ));
             },
@@ -185,6 +188,7 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
           showDialog(
               context: context,
               builder: (BuildContext context) => UserAuditSearch(
+                    userSearchEntity: userSearchEntity,
                     userSearchCallback: _userSearch,
                   ));
         },

@@ -4,8 +4,9 @@ import 'package:flutter_app/model/user_search_entity.dart';
 typedef void UserSearchCallback(UserSearchEntity userSearchEntity);
 
 class UserAuditSearch extends StatefulWidget {
-  const UserAuditSearch({Key key, this.userSearchCallback}) : super(key: key);
+  const UserAuditSearch({Key key, this.userSearchEntity, this.userSearchCallback}) : super(key: key);
 
+  final UserSearchEntity userSearchEntity;
   final UserSearchCallback userSearchCallback;
 
   @override
@@ -13,11 +14,10 @@ class UserAuditSearch extends StatefulWidget {
 }
 
 class _UserAuditSearchState extends State<UserAuditSearch> {
-  TextEditingController dateController = new TextEditingController();
-  TextEditingController sexController = new TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    TextEditingController dateController = new TextEditingController(text: widget.userSearchEntity.date);
+    TextEditingController sexController = new TextEditingController(text: widget.userSearchEntity.sex);
     return SimpleDialog(
       title: Text('待审核用户信息查询'),
       children: [
@@ -78,8 +78,7 @@ class _UserAuditSearchState extends State<UserAuditSearch> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
             onPressed: () {
               // 获取输入框中的值
-              widget.userSearchCallback(
-                  new UserSearchEntity(date: dateController.text, sex: int.parse(sexController.text)));
+              widget.userSearchCallback(new UserSearchEntity(date: dateController.text, sex: sexController.text));
               // 查询&关闭窗口
               Navigator.pop(context);
             },
