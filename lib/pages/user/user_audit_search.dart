@@ -15,33 +15,60 @@ class UserAuditSearch extends StatefulWidget {
 class _UserAuditSearchState extends State<UserAuditSearch> {
   TextEditingController dateController = new TextEditingController();
   TextEditingController sexController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
       title: Text('待审核用户信息查询'),
       children: [
-        TextField(
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.all(10.0),
-            icon: Icon(Icons.calendar_today),
-            labelText: '注册日期',
-            helperText: 'yyyyMMdd',
-          ),
-          autofocus: true,
-          controller: dateController,
+        Row(
+          children: [
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              flex: 1,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.all(10.0),
+                  icon: Icon(Icons.calendar_today),
+                  labelText: '注册日期',
+                  helperText: 'yyyyMMdd',
+                ),
+                autofocus: true,
+                controller: dateController,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            )
+          ],
         ),
-        TextField(
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.all(10.0),
-            icon: Icon(Icons.person),
-            labelText: '性别',
-            helperText: '0:女 1男',
-          ),
-          controller: sexController,
+        Row(
+          children: [
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              flex: 1,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.all(10.0),
+                  icon: Icon(Icons.person),
+                  labelText: '性别',
+                  helperText: '0:女 1男',
+                ),
+                controller: sexController,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+          ],
         ),
         Center(
           child: RaisedButton(
@@ -51,7 +78,8 @@ class _UserAuditSearchState extends State<UserAuditSearch> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
             onPressed: () {
               // 获取输入框中的值
-              widget.userSearchCallback(new UserSearchEntity(date: dateController.text, sex: int.parse(sexController.text)));
+              widget.userSearchCallback(
+                  new UserSearchEntity(date: dateController.text, sex: int.parse(sexController.text)));
               // 查询&关闭窗口
               Navigator.pop(context);
             },
