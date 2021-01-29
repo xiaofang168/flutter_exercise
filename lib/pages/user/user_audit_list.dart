@@ -48,37 +48,43 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
   }
 
   void _fetchData() async {
-    Response response = await Dio().get("http://test-pikpik-api.weli010.cn/pikpik/system/status");
-    print(response.toString());
-    SystemStatusEntity ss = SystemStatusEntity().fromJson(jsonDecode(response.toString()));
-    print("${ss.data}>>>>>");
-    var data = [
-      {
-        "id": 1,
-        "user_name": "张三",
-        "sex": 1,
-        "avatar":
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
-      },
-      {
-        "id": 2,
-        "user_name": "李四",
-        "sex": 1,
-        "avatar":
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
-      },
-      {
-        "id": 3,
-        "user_name": "刘玄德",
-        "sex": 1,
-        "avatar":
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
-      }
-    ];
-    // json数据解析
-    setState(() {
-      userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
-    });
+    try {
+      Response response = await Dio().get("http://test-pikpik-api.weli010.cn/pikpik/system/status");
+      print(response.toString());
+      SystemStatusEntity ss = SystemStatusEntity().fromJson(jsonDecode(response.toString()));
+      print("${ss.data}>>>>>");
+      var data = [
+        {
+          "id": 1,
+          "user_name": "张三",
+          "sex": 1,
+          "avatar":
+              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
+        },
+        {
+          "id": 2,
+          "user_name": "李四",
+          "sex": 1,
+          "avatar":
+              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
+        },
+        {
+          "id": 3,
+          "user_name": "刘玄德",
+          "sex": 1,
+          "avatar":
+              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
+        }
+      ];
+      // json数据解析
+      setState(() {
+        userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
+      });
+    } catch (e) {
+      print(e);
+      dataAlert = "${e.toString()}";
+      AppToast.show('服务异常...');
+    }
   }
 
   void _commit(int index, String level) {
