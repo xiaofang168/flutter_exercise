@@ -37,6 +37,7 @@ class UserAuditListHome extends StatefulWidget {
 class _UserAuditListHomeState extends State<UserAuditListHome> {
   ScrollController _scrollController = new ScrollController();
   List<UserItemEntity> userItems = [];
+  String dataAlert = "数据加载中...";
 
   // 下拉刷新->转一秒的圈,回调刷新的方法
   Future<void> _onRefresh() async {
@@ -101,7 +102,7 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
     });
   }
 
-  void _userSearch(UserSearchEntity userSearchEntity) {
+  void _userSearch(UserSearchEntity userSearchEntity) async {
     var data = [
       {
         "id": 1,
@@ -125,9 +126,16 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
       }
     ];
+    // 清空数据
     setState(() {
-      // 更新用户列表
-      userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
+      userItems=[];
+      dataAlert = "数据查询中...";
+    });
+    await Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        // 更新用户列表
+        userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
+      });
     });
   }
 
@@ -169,7 +177,7 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
               ),
             )
           : Center(
-              child: Text("数据加载中..."),
+              child: Text("$dataAlert"),
             ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.search),
