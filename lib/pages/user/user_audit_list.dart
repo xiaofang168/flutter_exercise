@@ -6,17 +6,13 @@ import 'package:flutter_app/model/system_status_entity.dart';
 import 'package:flutter_app/model/user_item_entity.dart';
 import 'package:flutter_app/model/user_search_entity.dart';
 import 'package:flutter_app/pages/user/user_audit_search.dart';
+import 'package:flutter_app/pages/user/user_card.dart';
 import 'package:flutter_app/utils/toast.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() => runApp(UserAuditList());
 
-class UserAuditList extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _UserAuditListState();
-}
-
-class _UserAuditListState extends State<UserAuditList> {
+class UserAuditList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,6 +20,7 @@ class _UserAuditListState extends State<UserAuditList> {
       theme: new ThemeData(primaryColor: Colors.blue, errorColor: Colors.red),
       debugShowCheckedModeBanner: false,
       home: UserAuditListHome(),
+      builder: EasyLoading.init(),
     );
   }
 }
@@ -82,7 +79,6 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
       });
     } catch (e) {
       print(e);
-      dataAlert = "${e.toString()}";
       AppToast.show('服务异常...');
     }
   }
@@ -134,24 +130,21 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586769048019&di=cf952359b63fd6a90ab57c7662c875a0&imgtype=0&src=http%3A%2F%2Fpic1.zhimg.com%2F50%2Fv2-2f3dfd6f7da18983fd5a4e48747d7ee3_hd.jpg"
       }
     ];
-    // 清空数据
-    setState(() {
-      userItems = [];
-      dataAlert = "数据查询中...";
-    });
+    await EasyLoading.show();
     await Future.delayed(Duration(seconds: 1), () {
       setState(() {
         // 更新用户列表
         userItems = data.map((e) => UserItemEntity().fromJson(e)).toList();
       });
     });
+    EasyLoading.dismiss();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("用户信息审核"),
+        title: const Text("用户信息审核"),
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -199,115 +192,6 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
                   ));
         },
       ),
-    );
-  }
-}
-
-/// 用户卡片
-class UserCard extends StatefulWidget {
-  final int index;
-  final String userName;
-  final int sex;
-  final String avatar;
-  final Function(int, String) commit;
-
-  const UserCard(this.commit, {Key key, @required this.index, this.userName, this.sex, this.avatar}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _UserCardState();
-}
-
-class _UserCardState extends State<UserCard> {
-  @override
-  Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: Size(750, 1334), allowFontScaling: true);
-    return Card(
-      borderOnForeground: false, // 是否在 child 前绘制 border，默认为 true
-      child: Container(
-          alignment: Alignment.center,
-          // 边框分割线
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: Colors.blue))),
-          child: Column(
-            children: [
-              FadeInImage.assetNetwork(
-                  image: widget.avatar,
-                  placeholder: "assets/images/loading.gif",
-                  fadeOutDuration: Duration(milliseconds: 3000),
-                  fadeOutCurve: Curves.easeOut),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                RaisedButton(
-                  color: Colors.blue,
-                  colorBrightness: Brightness.dark,
-                  child: Text("SR"),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                  onPressed: () {
-                    widget.commit(widget.index, "SR");
-                  },
-                ),
-                RaisedButton(
-                  color: Colors.cyan,
-                  colorBrightness: Brightness.dark,
-                  child: Text("R"),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                  onPressed: () {
-                    widget.commit(widget.index, "R");
-                  },
-                ),
-                RaisedButton(
-                  color: Colors.orange,
-                  colorBrightness: Brightness.dark,
-                  child: Text("N"),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                  onPressed: () {
-                    widget.commit(widget.index, "N");
-                  },
-                )
-              ]),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 25, right: 120, top: 0, bottom: 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("昵称：${widget.userName}",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(28, allowFontScalingSelf: true),
-                                )),
-                            Text("性别：${widget.sex == 1 ? '男' : '女'}",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(28, allowFontScalingSelf: true),
-                                ))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            RaisedButton(
-                              color: Colors.red,
-                              colorBrightness: Brightness.dark,
-                              child: Text('不通过'),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                              onPressed: () {
-                                widget.commit(widget.index, "不通过");
-                              },
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          )),
     );
   }
 }
