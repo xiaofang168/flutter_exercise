@@ -191,7 +191,7 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
               child: Text("$dataAlert"),
             ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
+        child: const Icon(Icons.search),
         onPressed: () {
           showDialog(
               context: context,
@@ -217,7 +217,13 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
           ),
         ],
         currentIndex: 0,
-        selectedItemColor: Colors.amber,
+        selectedItemColor: Colors.blue,
+        onTap: (int index) {
+          print(index);
+          if(index==2){
+            Application.router.navigateTo(context, "/setting");
+          }
+        },
       ),
     );
   }
