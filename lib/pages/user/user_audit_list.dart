@@ -29,6 +29,7 @@ class _UserAuditListState extends State<UserAuditList> {
     });
   }
 
+  // 异步获取数据
   void _fetchData() async {
     try {
       Response response = await Dio().get("http://test-pikpik-api.weli010.cn/pikpik/system/status");
@@ -80,7 +81,7 @@ class _UserAuditListState extends State<UserAuditList> {
   @override
   void initState() {
     super.initState();
-    // 请求服务器数据
+    // 异步请求服务器数据
     _fetchData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
