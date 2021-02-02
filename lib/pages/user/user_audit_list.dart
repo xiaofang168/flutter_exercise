@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/config/application.dart';
+import 'package:flutter_app/config/routes.dart';
 import 'package:flutter_app/model/system_status_entity.dart';
 import 'package:flutter_app/model/user_item_entity.dart';
 import 'package:flutter_app/model/user_search_entity.dart';
@@ -15,12 +18,18 @@ void main() => runApp(UserAuditList());
 class UserAuditList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final router = FluroRouter();
+    // 路由初始化
+    Routes.configureRoutes(router);
+    Application.router = router;
     return MaterialApp(
       title: "Material",
       theme: new ThemeData(primaryColor: Colors.blue, errorColor: Colors.red),
       debugShowCheckedModeBanner: false,
       home: UserAuditListHome(),
       builder: EasyLoading.init(),
+      // 路由静态化
+      onGenerateRoute: Application.router.generator,
     );
   }
 }
@@ -191,6 +200,24 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
                     userSearchCallback: _userSearch,
                   ));
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '首页',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contacts),
+            label: '通讯录',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.build),
+            label: '设置',
+          ),
+        ],
+        currentIndex: 0,
+        selectedItemColor: Colors.amber,
       ),
     );
   }
