@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/config/application.dart';
-import 'package:flutter_app/config/routes.dart';
 import 'package:flutter_app/model/system_status_entity.dart';
 import 'package:flutter_app/model/user_item_entity.dart';
 import 'package:flutter_app/model/user_search_entity.dart';
@@ -13,34 +10,13 @@ import 'package:flutter_app/pages/user/user_card.dart';
 import 'package:flutter_app/utils/toast.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-void main() => runApp(UserAuditList());
-
-class UserAuditList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final router = FluroRouter();
-    // 路由初始化
-    Routes.configureRoutes(router);
-    Application.router = router;
-    return MaterialApp(
-      title: "Material",
-      theme: new ThemeData(primaryColor: Colors.blue, errorColor: Colors.red),
-      debugShowCheckedModeBanner: false,
-      home: UserAuditListHome(),
-      builder: EasyLoading.init(),
-      // 路由静态化
-      onGenerateRoute: Application.router.generator,
-    );
-  }
-}
-
 /// 用户审核列表主页
-class UserAuditListHome extends StatefulWidget {
+class UserAuditList extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _UserAuditListHomeState();
+  State<StatefulWidget> createState() => _UserAuditListState();
 }
 
-class _UserAuditListHomeState extends State<UserAuditListHome> {
+class _UserAuditListState extends State<UserAuditList> {
   ScrollController _scrollController = new ScrollController();
   List<UserItemEntity> userItems = [];
   UserSearchEntity userSearchEntity = UserSearchEntity(date: "", sex: "");
@@ -199,30 +175,6 @@ class _UserAuditListHomeState extends State<UserAuditListHome> {
                     userSearchEntity: userSearchEntity,
                     userSearchCallback: _userSearch,
                   ));
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '首页',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.contacts),
-            label: '通讯录',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.build),
-            label: '设置',
-          ),
-        ],
-        currentIndex: 0,
-        selectedItemColor: Colors.blue,
-        onTap: (int index) {
-          print(index);
-          if(index==2){
-            Application.router.navigateTo(context, "/setting");
-          }
         },
       ),
     );
