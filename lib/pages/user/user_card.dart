@@ -63,44 +63,37 @@ class _UserCardState extends State<UserCard> {
               ]),
               Row(
                 children: [
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 25, right: 120, top: 0, bottom: 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("昵称：${widget.userName}",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(28, allowFontScalingSelf: true),
-                                )),
-                            Text("性别：${widget.sex == 1 ? '男' : '女'}",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(28, allowFontScalingSelf: true),
-                                ))
-                          ],
-                        ),
-                      )
-                    ],
+                  SizedBox(
+                    width: 20,
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            RaisedButton(
-                              color: Colors.red,
-                              colorBrightness: Brightness.dark,
-                              child: Text('不通过'),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                              onPressed: () {
-                                widget.commit(widget.index, "不通过");
-                              },
-                            )
-                          ],
-                        ),
-                      )
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("昵称：${widget.userName}",
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(28, allowFontScalingSelf: true),
+                            )),
+                        Text("性别：${widget.sex == 1 ? '男' : '女'}",
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(28, allowFontScalingSelf: true),
+                            ))
+                      ],
+                    ),
+                    flex: 2,
+                  ),
+                  Expanded(
+                      child: RaisedButton(
+                    color: Colors.red,
+                    colorBrightness: Brightness.dark,
+                    child: Text('不通过'),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                    onPressed: () {
+                      widget.commit(widget.index, "不通过");
+                    },
+                  )),
+                  SizedBox(
+                    width: 20,
                   ),
                 ],
               ),
